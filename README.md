@@ -1,4 +1,32 @@
+-- getgenv().Key = ""
 
+repeat wait(1) until game:IsLoaded()
+
+    if not getgenv().Key then
+        repeat wait() until getgenv().Key
+    end
+    
+    request = http_request or request or HttpPost or syn.request
+    hwid = game:GetService("RbxAnalyticsService"):GetClientId()
+    Payload = game:GetService("HttpService"):JSONEncode({key = getgenv().Key, hwid = hwid, type = 0})
+    response = request({
+        Url = "https://bot-test-tawan.herokuapp.com/api/v1/",
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+     Body = Payload
+    })
+    local j = game:GetService("HttpService"):JSONDecode(response.Body)
+    if j["success"] then
+      game.StarterGui:SetCore("SendNotification", {
+          Icon = "rbxassetid://10258071211";
+          Title = "Killer Hub", 
+          Text = "Check Whilelist Success!"
+      })
+        else
+            game.Players.LocalPlayer:Kick(j["ไม่มีkeyมาใช้ทำไมอะ"])
+    end
 
 function CheckLevel()
     local ml = game:GetService("Players").LocalPlayer.Data.Level.Value
